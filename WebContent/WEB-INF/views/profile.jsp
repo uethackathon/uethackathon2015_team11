@@ -2,6 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <input class="hidden" value="${student_name}" id="student" />
+<input class="hidden" value="${studentId}" id="studentId" />
+<input class="hidden" value="${viewerId}" id="viewerId" />
 <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -18,14 +20,59 @@
 
         <!-- Main content -->
         <section class="content" ng-controller="profileCtrl">
-
+			
+			
+			<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Chọn loại điểm cần kiểm tra lại</h4>
+                  </div>
+                  <div class="modal-body" style="heigth:300px">
+                  		<div class="row" style="margin: 5px">
+                  			<div class="col-sm-4">
+                  				Xem lại
+                  			</div>
+                  			<div class="col-sm-8">
+                  				<select ng-model="reportScore.scoreType" style="padding: 5px">
+							      <option value="">---Chọn loại điểm---</option> <!-- not selected / blank option -->
+							      <option value="điểm miệng">Điểm miệng</option> <!-- interpolation -->
+							      <option value="điểm 15ph">Điểm 15ph</option>
+							      <option value="điểm giữa kì">Điểm giữa kì</option>
+							      <option value="điểm cuối kì">Điểm cuối kì</option>
+							    </select>
+                  			</div>
+                  		</div>
+                    	<div class="row" style="margin: 5px">
+                  			<div class="col-sm-4">
+                  				Ở
+                  			</div>
+                  			<div class="col-sm-8">
+							    <select ng-model="reportScore.col" style="padding:5px">
+							      <option value="">---Chọn cột---</option> <!-- not selected / blank option -->
+							      <option value="1">Cột số 1</option> <!-- interpolation -->
+							      <option value="2">Cột số 2</option>
+							      <option value="3">Cột số 3</option>
+							    </select>
+						    </div>
+					    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-success" ng-click="report()" data-dismiss="modal">Gửi</button>
+                  </div>
+                </div>
+  </div>
+</div>
+			
           <div class="row">
             <div class="col-md-4">
 
               <!-- Profile Image -->
               <div class="box box-primary">
                 <div class="box-body box-profile">
-                  <img class="profile-user-img img-responsive img-circle" src="<spring:url value="/resources/avatar/{{user.avatar}}" />" alt="User profile picture">
+                  <img class="profile-user-img img-responsive img-circle" style = "heigh: 10px; weight: 10px " src="<spring:url value="/resources/avatar/{{user.avatar}}" />" alt="User profile picture">
                   <h3 class="profile-username text-center">{{user.name}}</h3>
                   <p class="text-muted text-center">Học Sinh</p>
 
@@ -64,7 +111,7 @@
                 </ul>
                 <div class="tab-content">
                   <div class="active tab-pane" id="activity">
-                  	<div class='form-horizontal'>
+                  	<div class='form-horizontal' ng-if="studentId != viewerId">
                         <div class='form-group margin-bottom-none'>
                           <div class='col-sm-9'>
                             <input style="height: 70px" class="form-control input-sm" placeholder="Nội dung..." id="comment">
@@ -77,7 +124,7 @@
                       <br/>
                     <!-- Post -->
                     <div class="post" dir-paginate="comment in comments | filter:search | itemsPerPage: pageSize" current-page="currentPage" id="listComment">
-                      <div class="user-block">
+                      <div class="user-block" style="padding-left: 20px">
                         <img class="img-circle img-bordered-sm" src="<spring:url value="/resources/avatar/{{comment.avatar}}" />" alt="user image">
                         <span class='username'>
                           <a href="#">{{comment.writer}}</a>
@@ -85,7 +132,7 @@
                         </span>
                         <span class='description'>{{comment.time | date : 'dd-M-yyyy HH:ss'}}</span>
                       </div><!-- /.user-block -->
-                      <p>
+                      <p style="padding-left: 20px">
                         {{comment.content}}
                       </p>
                       
@@ -105,12 +152,6 @@
                 <div class="box-header" style="padding: 5px;margin: 5px">
                   <h3 class="box-title">Bảng điểm</h3>
                   <div class="box-tools">
-                    <div class="input-group" style="width: 250px">
-                      <input type="text" name="table_search" class="form-control input-sm pull-right" placeholder="Search">
-                      <div class="input-group-btn">
-                        <button class="btn btn-sm btn-default">Tìm kiếm</button>
-                      </div>
-                    </div>
                   </div>
                 </div><!-- /.box-header -->
                 <div class="box-body table-responsive no-padding">
@@ -121,7 +162,7 @@
                       <th colspan="9" style="text-align: center"> Điểm </th>
                       <th rowspan="3" style="text-align: center; vertical-align: middle"> Cuối kỳ </th>
                       <th rowspan="3" style="text-align: center; vertical-align: middle"> TB môn </th>
-                      <th rowspan="3" style="text-align: center; vertical-align: middle" class="col-xs-2"> Report </th>
+                      <th  ng-if="viewerId == studentId" rowspan="3" style="text-align: center; vertical-align: middle" class="col-xs-2"> Report </th>
                     </tr>
 
                     <tr>
@@ -167,7 +208,7 @@
                       <td style="text-align: center">{{subject.scores[8].score}}</td>
                       <td style="text-align: center">{{subject.scores[9].score}}</td>
                       <td style="text-align: center"> 7.5</td>
-                      <td style="text-align: center"><button class="btn btn-warning"><i class="fa fa-mail-forward"></i></button></td>
+                      <td  ng-if="viewerId == studentId" style="text-align: center"><button data-toggle="modal" data-target=".bs-example-modal-sm" ng-click="reportScore.teacherId = subject.teacherId" class="btn btn-warning"><i class="fa fa-mail-forward"></i></button></td>
                     </tr>
 
                   </table>

@@ -34,6 +34,7 @@
     <link rel="stylesheet" href="<spring:url value="/resources/plugins/jvectormap/jquery-jvectormap-1.2.2.css" />">
     <!-- Date Picker -->
     <link rel="stylesheet" href="<spring:url value="/resources/plugins/datepicker/datepicker3.css" />">
+    
     <!-- Daterange picker -->
     <link rel="stylesheet" href="<spring:url value="/resources/plugins/daterangepicker/daterangepicker-bs3.css" />">
     <!-- bootstrap wysihtml5 - text editor -->
@@ -51,6 +52,7 @@
   </head>
 <body class="hold-transition skin-blue sidebar-mini" ng-app="myApp">
 	<input class="hidden" value="${pageContext.request.contextPath}" id="rootPath" />
+	<input class="hidden" value="${id}" id="id_user" />
     <div class="wrapper">
 			<tiles:insertAttribute name="header" ignore="true"/>
 			<tiles:insertAttribute name="menu" ignore="true"/>

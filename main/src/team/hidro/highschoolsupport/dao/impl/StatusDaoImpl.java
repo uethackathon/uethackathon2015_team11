@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import team.hidro.highschoolsupport.dao.AutoWireJdbcDaoSupport;
 import team.hidro.highschoolsupport.dao.StatusDao;
+import team.hidro.highschoolsupport.entities.InitialStatusDetail;
 import team.hidro.highschoolsupport.entities.StatusDetail;
 
 @Repository
@@ -18,7 +19,6 @@ public class StatusDaoImpl extends AutoWireJdbcDaoSupport implements StatusDao {
 
 	@Override
 	public List<StatusDetail> getList() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -40,7 +40,11 @@ public class StatusDaoImpl extends AutoWireJdbcDaoSupport implements StatusDao {
 				int userId = rs.getInt("user_id");
 				String content = rs.getString("content");
 				long dateTime = rs.getLong("time");
-				StatusDetail statusDetail = new StatusDetail(id1, groupId, userId, content, dateTime, null, null);
+				int enable = rs.getInt("enable");
+				int type = rs.getInt("type");
+				String title = rs.getString("title");
+				StatusDetail statusDetail = new StatusDetail(id1, groupId, userId, content, dateTime, null, null,
+						enable, type, title);
 				return statusDetail;
 			}
 		} catch (Exception e) {
@@ -60,12 +64,15 @@ public class StatusDaoImpl extends AutoWireJdbcDaoSupport implements StatusDao {
 		ResultSet rs = null;
 		try {
 			conn = dataSource.getConnection();
-			String sql = "insert into stt VALUES (NULL,?,?,?,?,?)";
+			String sql = "insert into stt VALUES (NULL,?,?,?,?,?,?,?)";
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, item.getUserId());
 			ps.setInt(2, item.getGroupId());
 			ps.setString(3, item.getContent());
-			ps.setLong(4, item.getDateTime());
+			ps.setInt(4, item.getEnable());
+			ps.setLong(5, item.getDateTime());
+			ps.setInt(6, item.getType());
+			ps.setString(7, item.getTitle());
 			return (ps.executeUpdate() > 0) ? true : false;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -125,7 +132,8 @@ public class StatusDaoImpl extends AutoWireJdbcDaoSupport implements StatusDao {
 				int userId = rs.getInt("user_id");
 				long time = rs.getLong("time");
 				String content = rs.getString("content");
-				statusDetails.add(new StatusDetail(id1, userId, content, time));
+				String title = rs.getString("title");
+				statusDetails.add(new StatusDetail(id1, userId, content, title, time));
 			}
 			return statusDetails;
 		} catch (Exception e) {
@@ -137,5 +145,175 @@ public class StatusDaoImpl extends AutoWireJdbcDaoSupport implements StatusDao {
 		}
 		return null;
 	}
+
+	@SuppressWarnings("resource")
+	@Override
+	public InitialStatusDetail getListInitialStatusByGroupId(int groupId) {
+		Connection conn = null;
+		PreparedStatement smt = null;
+		ResultSet rs = null;
+		try {
+
+			conn = dataSource.getConnection();
+			String sql = "Select * from stt  where group_id = ? and type= ? ORDER BY time DESC LIMIT 3";
+
+			List<StatusDetail> thongBaos = new ArrayList<StatusDetail>();
+			smt = conn.prepareStatement(sql);
+			smt.setInt(1, groupId);
+			smt.setInt(2, 1);
+			rs = smt.executeQuery();
+			while (rs.next()) {
+				int id1 = rs.getInt("id");
+				int userId = rs.getInt("user_id");
+				long time = rs.getLong("time");
+				String content = rs.getString("content");
+				String title = rs.getString("title");
+				thongBaos.add(new StatusDetail(id1, userId, content, title, time));
+			}
+
+			List<StatusDetail> hoiDaps = new ArrayList<StatusDetail>();
+			smt = conn.prepareStatement(sql);
+			smt.setInt(1, groupId);
+			smt.setInt(2, 2);
+			rs = smt.executeQuery();
+			while (rs.next()) {
+				int id1 = rs.getInt("id");
+				int userId = rs.getInt("user_id");
+				long time = rs.getLong("time");
+				String content = rs.getString("content");
+				String title = rs.getString("title");
+				hoiDaps.add(new StatusDetail(id1, userId, content, title, time));
+			}
+
+			List<StatusDetail> taiLieus = new ArrayList<StatusDetail>();
+			smt = conn.prepareStatement(sql);
+			smt.setInt(1, groupId);
+			smt.setInt(2, 3);
+			rs = smt.executeQuery();
+			while (rs.next()) {
+				int id1 = rs.getInt("id");
+				int userId = rs.getInt("user_id");
+				long time = rs.getLong("time");
+				String content = rs.getString("content");
+				String title = rs.getString("title");
+				taiLieus.add(new StatusDetail(id1, userId, content, title, time));
+			}
+			return new InitialStatusDetail(thongBaos, hoiDaps, taiLieus);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DbUtils.closeQuietly(rs);
+			DbUtils.closeQuietly(smt);
+			DbUtils.closeQuietly(conn);
+		}
+		return null;
+	}
+
+	@Override
+	public List<StatusDetail> getListStatusByGroupIdType1(int groupId) {
+		Connection conn = null;
+		PreparedStatement smt = null;
+		ResultSet rs = null;
+		try {
+
+			conn = dataSource.getConnection();
+			String sql = "Select * from stt  where group_id = ? and type= ? ORDER BY time DESC";
+
+			List<StatusDetail> thongBaos = new ArrayList<StatusDetail>();
+			smt = conn.prepareStatement(sql);
+			smt.setInt(1, groupId);
+			smt.setInt(2, 1);
+			rs = smt.executeQuery();
+			while (rs.next()) {
+				int id1 = rs.getInt("id");
+				int userId = rs.getInt("user_id");
+				long time = rs.getLong("time");
+				String content = rs.getString("content");
+				String title = rs.getString("title");
+				thongBaos.add(new StatusDetail(id1, userId, content, title, time));
+			}
+
+			return thongBaos;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DbUtils.closeQuietly(rs);
+			DbUtils.closeQuietly(smt);
+			DbUtils.closeQuietly(conn);
+		}
+		return null;
+	}
+
+	@Override
+	public List<StatusDetail> getListStatusByGroupIdType2(int groupId) {
+		Connection conn = null;
+		PreparedStatement smt = null;
+		ResultSet rs = null;
+		try {
+
+			conn = dataSource.getConnection();
+			String sql = "Select * from stt  where group_id = ? and type= ? ORDER BY time DESC";
+
+			List<StatusDetail> hoiDaps = new ArrayList<StatusDetail>();
+			smt = conn.prepareStatement(sql);
+			smt.setInt(1, groupId);
+			smt.setInt(2, 2);
+			rs = smt.executeQuery();
+			while (rs.next()) {
+				int id1 = rs.getInt("id");
+				int userId = rs.getInt("user_id");
+				long time = rs.getLong("time");
+				String content = rs.getString("content");
+				String title = rs.getString("title");
+				hoiDaps.add(new StatusDetail(id1, userId, content, title, time));
+			}
+
+			return hoiDaps;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DbUtils.closeQuietly(rs);
+			DbUtils.closeQuietly(smt);
+			DbUtils.closeQuietly(conn);
+		}
+		return null;
+	}
+
+	@Override
+	public List<StatusDetail> getListStatusByGroupIdType3(int groupId) {
+		Connection conn = null;
+		PreparedStatement smt = null;
+		ResultSet rs = null;
+		try {
+
+			conn = dataSource.getConnection();
+			String sql = "Select * from stt  where group_id = ? and type= ? ORDER BY time DESC";
+
+			List<StatusDetail> taiLieus = new ArrayList<StatusDetail>();
+			smt = conn.prepareStatement(sql);
+			smt.setInt(1, groupId);
+			smt.setInt(2, 3);
+			rs = smt.executeQuery();
+			while (rs.next()) {
+				int id1 = rs.getInt("id");
+				int userId = rs.getInt("user_id");
+				long time = rs.getLong("time");
+				String content = rs.getString("content");
+				String title = rs.getString("title");
+				taiLieus.add(new StatusDetail(id1, userId, content, title, time));
+			}
+
+			return taiLieus;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DbUtils.closeQuietly(rs);
+			DbUtils.closeQuietly(smt);
+			DbUtils.closeQuietly(conn);
+		}
+		return null;
+	}
+	
+	
 
 }
