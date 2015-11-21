@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import team.hidro.highschoolsupport.entities.StudentDetail;
 import team.hidro.highschoolsupport.entities.TeacherDetail;
 import team.hidro.highschoolsupport.entities.UserDetail;
 import team.hidro.highschoolsupport.service.TeacherService;
@@ -53,6 +52,8 @@ public class LoginController {
 				case 3 :
 					TeacherDetail teacher = teacherService.getById(user.getId());
 					session.setAttribute("user", teacher);
+					session.setAttribute("avatar", teacher.getAvatar());
+					session.setAttribute("name", teacher.getName());
 					model.setViewName("redirect:home");
 				default : ;
 				
@@ -60,6 +61,14 @@ public class LoginController {
 			
 		}
 		return model;
+	}
+	
+	@RequestMapping("/logout")
+	public ModelAndView logout(HttpSession sesion){
+		
+		sesion.invalidate();
+		
+		return new ModelAndView("login");
 	}
 	
 }

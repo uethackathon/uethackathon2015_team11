@@ -1,10 +1,13 @@
 package team.hidro.highschoolsupport.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +43,6 @@ public class ScoreController {
 	
 	@RequestMapping("/class/{idClass}/student/{subjectId}")
 	public @ResponseBody List<StudentScoreDetail> _getClass(@PathVariable("idClass") int idClass, @PathVariable("subjectId") int idSubject){
-		
 		return classService.getListStudentScoreByClassAndSubject(idClass, idSubject, 1);
 	}
 	
@@ -53,9 +55,32 @@ public class ScoreController {
 	}
 	
 	@RequestMapping(value = "class/update_score", method = RequestMethod.POST)
-	public void updateScore(@RequestParam Map<String,String> params){
+	public  @ResponseBody void updateScore(@RequestParam Map<String,String> params){
+		String content =params.toString();
+		JSONObject obj = new JSONObject(content.substring(1,content.length()-2));
 		
-		System.out.println(params.toString());
+		List<ScoreDetail> scoreDetails = new ArrayList<ScoreDetail>();
+		JSONArray array = obj.getJSONArray("scores");
+		for(int i = 0 ; i < array.length() ; i++){
+		    int id =array.getJSONObject(i).getInt("id");
+		    String scoreString =array.getJSONObject(i).get("score")+"";
+		    int type =array.getJSONObject(i).getInt("type");
+		    int userId =array.getJSONObject(i).getInt("userId");
+		    int subjectYearId =array.getJSONObject(i).getInt("subjectYearId");
+		    int ky =array.getJSONObject(i).getInt("ky");
+		    int score= scoreString.equals("") ? -1: Integer.parseInt(scoreString);
+		    ScoreDetail scoreDetail = new ScoreDetail(id,score, type, userId, subjectYearId, ky);
+		    scoreDetails.add(scoreDetail);
+		}
+		
+		for (ScoreDetail scoreDetail : scoreDetails) {
+			if(scoreDetail.getScore()==-1&&scoreDetail.getId()!=0)
+				scoreService.remove(scoreDetail.getId());
+			if(scoreDetail.getScore()!=-1&&scoreDetail.getId()!=0)
+				scoreService.update(scoreDetail);
+			if(scoreDetail.getScore()!=-1&&scoreDetail.getId()==0)
+				scoreService.save(scoreDetail);
+		}
 		
 	}
 }

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<input class="hidden" value="${student_name}" id="student" />
 <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -19,7 +20,7 @@
         <section class="content" ng-controller="profileCtrl">
 
           <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
 
               <!-- Profile Image -->
               <div class="box box-primary">
@@ -50,44 +51,48 @@
               </div><!-- /.box -->
 
             </div><!-- /.col -->
-            <div class="col-md-9">
+            <div class="col-md-8">
+            	<div id="container" class="box box-primary" style="width: 700px; margin: 0 auto"></div>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-md-12">
               <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                   <li class="active"><a href="#activity" data-toggle="tab">Nhận Xét Của Giáo Viên</a></li>
                   <li><a href="#timeline" data-toggle="tab">Bảng Điểm</a></li>
-                  <li><a href="#statistic" data-toggle="tab">Thống Kê</a></li>
                 </ul>
                 <div class="tab-content">
                   <div class="active tab-pane" id="activity">
+                  	<div class='form-horizontal'>
+                        <div class='form-group margin-bottom-none'>
+                          <div class='col-sm-9'>
+                            <input style="height: 70px" class="form-control input-sm" placeholder="Nội dung..." id="comment">
+                          </div>                          
+                          <div class='col-sm-3'>
+                            <button class='btn btn-primary pull-right btn-block btn-sm' ng-click="addComment()">Gửi Nhận Xét</button>
+                          </div>                          
+                        </div>                        
+                      </div>
+                      <br/>
                     <!-- Post -->
-                    <div class="post" ng-repeat="comment in comments">
+                    <div class="post" dir-paginate="comment in comments | filter:search | itemsPerPage: pageSize" current-page="currentPage" id="listComment">
                       <div class="user-block">
-                        <img class="img-circle img-bordered-sm" src="<spring:url value="/resources/avatar/{{comment.user.avatar}}" />" alt="user image">
+                        <img class="img-circle img-bordered-sm" src="<spring:url value="/resources/avatar/{{comment.avatar}}" />" alt="user image">
                         <span class='username'>
-                          <a href="#">{{comment.user.name}}</a>
+                          <a href="#">{{comment.writer}}</a>
                           <a href='#' class='pull-right btn-box-tool'><i class='fa fa-times'></i></a>
                         </span>
                         <span class='description'>{{comment.time | date : 'dd-M-yyyy HH:ss'}}</span>
                       </div><!-- /.user-block -->
                       <p>
-                        {{comment.message}}
+                        {{comment.content}}
                       </p>
                       
                     </div><!-- /.post -->
-
-                    
-                      <form class='form-horizontal'>
-                        <div class='form-group margin-bottom-none'>
-                          <div class='col-sm-9'>
-                            <input class="form-control input-sm" placeholder="Response">
-                          </div>                          
-                          <div class='col-sm-3'>
-                            <button class='btn btn-danger pull-right btn-block btn-sm'>Send</button>
-                          </div>                          
-                        </div>                        
-                      </form>
-                   
-
+					<div class="text-right" style="margin-top: -10px">
+			          	<dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="http://localhost:8080/SpringProject/resources/dirPagination.tpl.html"></script>"></dir-pagination-controls>
+			        </div>
                     
                   </div><!-- /.tab-pane -->
                   <div class="tab-pane" id="timeline">
@@ -97,26 +102,26 @@
           <div class="row">
             <div class="col-xs-12">
               <div class="box">
-                <div class="box-header">
-                  <h3 class="box-title">Bảng điểm học kỳ 1</h3>
+                <div class="box-header" style="padding: 5px;margin: 5px">
+                  <h3 class="box-title">Bảng điểm</h3>
                   <div class="box-tools">
-                    <div class="input-group" style="width: 150px;">
+                    <div class="input-group" style="width: 250px">
                       <input type="text" name="table_search" class="form-control input-sm pull-right" placeholder="Search">
                       <div class="input-group-btn">
-                        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
+                        <button class="btn btn-sm btn-default">Tìm kiếm</button>
                       </div>
                     </div>
                   </div>
                 </div><!-- /.box-header -->
                 <div class="box-body table-responsive no-padding">
-                  <table class="table table-bordered table-hover" style=" border: 2px solid #cccccc">
+                  <table class="table table-bordered table-hover">
                     <tr>
                       <th rowspan="3" style="text-align: center; vertical-align: middle">STT</th>
-                      <th rowspan="3" style="text-align: center; vertical-align: middle" class="col-xs-2">Họ tên học sinh</th>
+                      <th rowspan="3" style="text-align: center; vertical-align: middle" class="col-xs-2">Môn học</th>
                       <th colspan="9" style="text-align: center"> Điểm </th>
                       <th rowspan="3" style="text-align: center; vertical-align: middle"> Cuối kỳ </th>
                       <th rowspan="3" style="text-align: center; vertical-align: middle"> TB môn </th>
-                      <th rowspan="3" style="text-align: center; vertical-align: middle" class="col-xs-2"> Hoạt động </th>
+                      <th rowspan="3" style="text-align: center; vertical-align: middle" class="col-xs-2"> Report </th>
                     </tr>
 
                     <tr>
@@ -148,71 +153,21 @@
                       <th style="text-align: center"> (1) </th>
                     </tr> -->
 
-                    <tr>
-                      <td style="text-align: center">1</td>
-                      <td style="text-align: center">Nguyễn Văn Kim</td>
-                      <td style="text-align: center"> 6.5</td>
-                      <td style="text-align: center"> 8.5</td>
-                      <td style="text-align: center"> 7</td>
-                      <td style="text-align: center"> 7</td>
+                    <tr ng-repeat="subject in subjects">
+                      <td style="text-align: center">{{$index + 1}}</td>
+                      <td style="text-align: center">{{subject.name}}</td>
+                      <td style="text-align: center">{{subject.scores[0].score}}</td>
+                      <td style="text-align: center">{{subject.scores[1].score}}</td>
+                      <td style="text-align: center">{{subject.scores[2].score}}</td>
+                      <td style="text-align: center">{{subject.scores[3].score}}</td>
+                      <td style="text-align: center">{{subject.scores[4].score}}</td>
+                      <td style="text-align: center">{{subject.scores[5].score}}</td>
+                      <td style="text-align: center">{{subject.scores[6].score}}</td>
+                      <td style="text-align: center">{{subject.scores[7].score}}</td>
+                      <td style="text-align: center">{{subject.scores[8].score}}</td>
+                      <td style="text-align: center">{{subject.scores[9].score}}</td>
                       <td style="text-align: center"> 7.5</td>
-                      <td style="text-align: center"> 8.5</td>
-                      <td style="text-align: center"> 6.5</td>
-                      <td style="text-align: center"> 8.5</td>
-                      <td style="text-align: center"> 8</td>
-                      <td style="text-align: center"> 8.5</td>
-                      <td style="text-align: center"> 7.5</td>
-                      <td style="text-align: center"> </td>
-                    </tr>
-                    <tr>
-                      <td style="text-align: center">2</td>
-                      <td style="text-align: center">Vương Thị Hồng</td>
-                      <td style="text-align: center"> 8</td>
-                      <td style="text-align: center"> 6</td>
-                      <td style="text-align: center"> 4.5</td>
-                      <td style="text-align: center"> 6.5</td>
-                      <td style="text-align: center"> 8.5</td>
-                      <td style="text-align: center"> 8</td>
-                      <td style="text-align: center"> 8</td>
-                      <td style="text-align: center"> 8</td>
-                      <td style="text-align: center"> 8.5</td>
-                      <td style="text-align: center"> 9</td>
-                      <td style="text-align: center"> 8.5</td>
-                      <td style="text-align: center"> </td>
-                    </tr>
-
-                    <tr>
-                      <td style="text-align: center">3</td>
-                      <td style="text-align: center">Nguyễn Văn Hợp</td>
-                      <td style="text-align: center"> 8.5</td>
-                      <td style="text-align: center"> 8</td>
-                      <td style="text-align: center"> 7.5</td>
-                      <td style="text-align: center"> 9</td>
-                      <td style="text-align: center"> 9</td>
-                      <td style="text-align: center"> 9.5</td>
-                      <td style="text-align: center"> 4</td>
-                      <td style="text-align: center"> 4.5</td>
-                      <td style="text-align: center"> 6.5</td>
-                      <td style="text-align: center"> 6</td>
-                      <td style="text-align: center"> 8.5</td>
-                      <td style="text-align: center"> </td>
-                    </tr>
-
-                    <tr>
-                      <td style="text-align: center">4</td>
-                      <td style="text-align: center">Đậu Mạnh Quang</td>
-                      <td style="text-align: center"> 6</td>
-                      <td style="text-align: center"> 7.5</td>
-                      <td style="text-align: center"> 8</td>
-                      <td style="text-align: center"> 8</td>
-                      <td style="text-align: center"> 8.5</td>
-                      <td style="text-align: center"> 7.5</td>
-                      <td style="text-align: center"> 6.5</td>
-                      <td style="text-align: center"> 9.5</td>
-                      <td style="text-align: center"> 9</td>
-                      <td style="text-align: center"> 8.5</td>
-                      <td style="text-align: center"> 7</td>
-                      <td style="text-align: center"> </td>
+                      <td style="text-align: center"><button class="btn btn-warning"><i class="fa fa-mail-forward"></i></button></td>
                     </tr>
 
                   </table>
@@ -222,10 +177,12 @@
           </div>
         </section><!-- /.content -->
                   	
-                  </div><!-- /.tab-pane -->
+                  <!-- </div>/.tab-pane
                   <div class="tab-pane" id="statistic">
                   		Thống Kê ở Đây
-                  </div>
+                  		<div id="container" style="width: 100%; height: 600px; margin: 0 auto"></div>
+                  		
+                  </div> -->
 
                 </div><!-- /.tab-content -->
               </div><!-- /.nav-tabs-custom -->

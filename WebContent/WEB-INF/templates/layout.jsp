@@ -19,6 +19,10 @@
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="<spring:url value="/resources/dist/css/AdminLTE.min.css" />">
+    <!-- jQuery 2.1.4 -->
+    <script src="<spring:url value="/resources/plugins/jQuery/jQuery-2.1.4.min.js" />"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>	
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="<spring:url value="/resources/dist/css/skins/_all-skins.min.css" />">
@@ -54,10 +58,6 @@
 			<tiles:insertAttribute name="body" />
 			<tiles:insertAttribute name="footer" ignore="true"/>
    	</div>
-	<!-- jQuery 2.1.4 -->
-    <script src="<spring:url value="/resources/plugins/jQuery/jQuery-2.1.4.min.js" />"></script>
-    <!-- jQuery UI 1.11.4 -->
-    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <script>
       $.widget.bridge('uibutton', $.ui.button);
@@ -99,5 +99,8 @@
     <script type="text/javascript" src="<spring:url value="/resources/js/notify/pnotify.core.js" />"></script>
     <script type="text/javascript" src="<spring:url value="/resources/js/notify/pnotify.buttons.js" />"></script>
     <script type="text/javascript" src="<spring:url value="/resources/js/notify/pnotify.nonblock.js" />"></script>
+	<script type="text/javascript" src="<spring:url value="/resources/plugins/HighChart/highcharts.js" />"></script>
+	<script type="text/javascript" src="<spring:url value="/resources/plugins/HighChart/exporting.js" />"></script>
+	<script type="text/javascript" src="<spring:url value="/resources/plugins/HighChart/DrawLineChart.js" />"></script>
 </body>
 </html>

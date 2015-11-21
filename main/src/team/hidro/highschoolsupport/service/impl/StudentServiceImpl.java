@@ -1,12 +1,19 @@
 package team.hidro.highschoolsupport.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import team.hidro.highschoolsupport.dao.StudentDao;
+import team.hidro.highschoolsupport.entities.CommentProfile;
+import team.hidro.highschoolsupport.entities.ScoreDetail;
 import team.hidro.highschoolsupport.entities.StudentDetail;
+import team.hidro.highschoolsupport.entities.SubjectScore;
 import team.hidro.highschoolsupport.service.StudentService;
 @Service
 public class StudentServiceImpl implements StudentService{
@@ -61,6 +68,37 @@ public class StudentServiceImpl implements StudentService{
 	public boolean update(StudentDetail item) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public List<CommentProfile> getListCommentProfile(String id) {
+		
+		List<CommentProfile> commentProfiles = studentDao.getListCommentProfile(id);
+		
+		Collections.sort(commentProfiles, new Comparator<CommentProfile>() {
+
+			@Override
+			public int compare(CommentProfile o1, CommentProfile o2) {
+				if (o1.getTime() < o2.getTime()) {
+					return 1;
+				} else {
+					if (o1.getTime() == o2.getTime()) {
+						return 0;
+					} else {
+						return -1;
+					}
+				}
+			}
+		});
+		
+		return commentProfiles;
+	}
+
+	@Override
+	public List<SubjectScore> getListSubjectScore(String username) {
+		List<SubjectScore> subjectScores = studentDao.getListSubjectScore(username);
+		
+		return subjectScores;
 	}
 
 }

@@ -3,11 +3,59 @@ package team.hidro.highschoolsupport.entities;
 import java.util.List;
 
 public class StatusDetail {
+	private int id;
+	private int groupId;
+	private int userId;
 	private String content;
 	private Long dateTime;
 	private List<CommentDetail> commentDetails;
 	private WriterDetail writerDetail;
+	
+	public StatusDetail(int id, int groupId, int userId, String content, Long dateTime,
+			List<CommentDetail> commentDetails, WriterDetail writerDetail) {
+		super();
+		this.id = id;
+		this.groupId = groupId;
+		this.userId = userId;
+		this.content = content;
+		this.dateTime = dateTime;
+		this.commentDetails = commentDetails;
+		this.writerDetail = writerDetail;
+	}
 
+	public int getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(int groupId) {
+		this.groupId = groupId;
+	}
+	
+	
+	public int getId() {
+		return id;
+	}
+
+	public StatusDetail(int id, int userId, String content, Long dateTime) {
+		super();
+		this.id = id;
+		this.userId = userId;
+		this.content = content;
+		this.dateTime = dateTime;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+	
 	public StatusDetail(String content, Long dateTime, List<CommentDetail> commentDetails, WriterDetail writerDetail) {
 		super();
 		this.content = content;
