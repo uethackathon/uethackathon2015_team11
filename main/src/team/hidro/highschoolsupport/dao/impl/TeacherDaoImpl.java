@@ -27,6 +27,33 @@ public class TeacherDaoImpl extends AutoWireJdbcDaoSupport implements TeacherDao
 
 	@Override
 	public TeacherDetail getById(Integer id) {
+		Connection conn = null;
+		PreparedStatement smt = null;
+		ResultSet rs = null;
+		try {
+			conn = dataSource.getConnection();
+			String sql = "select * from teacher where user_id = ?";
+			smt = conn.prepareStatement(sql);
+			smt.setInt(1, id);
+
+			rs = smt.executeQuery();
+			if (rs.next()) {
+				int _id = rs.getInt("user_id");
+				String name = rs.getString("name");
+				String detail = rs.getString("details");
+				String avatar = rs.getString("avatar");
+				
+				return new TeacherDetail(_id, name, detail, avatar);
+			}
+			return null;
+		} catch (Exception e) {
+//			logger.error("queryPost", e);
+			e.printStackTrace();
+		} finally {
+			DbUtils.closeQuietly(rs);
+			DbUtils.closeQuietly(smt);
+			DbUtils.closeQuietly(conn);
+		}
 		return null;
 	}
 
@@ -40,10 +67,6 @@ public class TeacherDaoImpl extends AutoWireJdbcDaoSupport implements TeacherDao
 
 	}
 
-	@Override
-	public void update(TeacherDetail item) {
-
-	}
 
 	@Override
 	public List<ListClassDetail> getListClassByTeacherId(int id) {
@@ -67,7 +90,7 @@ public class TeacherDaoImpl extends AutoWireJdbcDaoSupport implements TeacherDao
 			System.out.println(year+" "+id);
 			while (rs.next()) {
 				System.out.println(i++);
-				int subjectId = rs.getInt("subject.id");
+				int subjectId = rs.getInt("subject_year.id");
 				String subjectName = rs.getString("subject.name");
 				int classId = rs.getInt("class.id");
 				String className = rs.getString("class.name");
@@ -97,6 +120,12 @@ public class TeacherDaoImpl extends AutoWireJdbcDaoSupport implements TeacherDao
 	public TeacherDetail getByName(String usernme) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean update(TeacherDetail item) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

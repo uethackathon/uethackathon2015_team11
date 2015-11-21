@@ -7,19 +7,54 @@ app.controller('scoreCtrl', function($scope, $http) {
 		$scope.selectState[data[i].fb_id] = 0;
 	}*/
 	
-	$scope.classes = [
-	                 {id: '12a3',name:'12A3'},
-	                 {id: '12a2',name:'12A2'},
-	                 {id: '12a1',name:'12A1'},
-	               ];
+	$scope.classes = [];
 	$scope.students = [];
+	$scope.copyData = [];
+	
+	$http.get($('#rootPath').val() + "/class")
+	.success(function(data){
+		$scope.classes = data;
+		console.log(data);
+	});
+	
+	$scope.editable = [];
 	$scope.class_selected = function($class){
-		$http.get("thuylt/class/" + $class.id)
+		$http.get($('#rootPath').val() + "/class/" + $class.classDetail.id + "/student/" + $class.subjectId)
 		.success(function(data){
+			console.log(data);
 			$scope.students = data;
-			console.log($scope.students);
+			
+			for(var i = 0 ; i < data.length ; i++){
+				for(var j = 0 ; j < data[i].scores.length ; j++){
+					if(data[i].scores[j].score == -1){
+						data[i].scores[j].score = '';
+					}
+				}
+			}
+			console.log(data);
+			$scope.copyData = angular.copy(data);
+			for(var i = 0 ; i < data.length ; i++)
+				$scope.editable[data[i].studentDetail.userId] = 0;
 		});
 	};
+	
+	$scope.update = function($student){
+		$scope.editable[$student.studentDetail.userId] = 0;
+		$scope.copyData = angular.copy($scope.students);
+		
+		$http({
+				url : $('#rootPath').val() + "/class/update_score",
+				data : $student,
+				method  : 'POST',
+		       contentType: "application/json",
+		       headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'}
+		})
+		
+	};
+	$scope.cancel = function($student){
+		$scope.editable[$student.studentDetail.userId] = 0;
+		$scope.students = angular.copy($scope.copyData);
+	}
 	
     /*var data = [{id: '1',name:'Jani',birthday:'16/11/1994',mouth_score: '9',middle_score:'9',final_score:'10'},
 				{id: '2',name:'Mark',birthday:'17/11/1994',mouth_score: '5',middle_score:'3',final_score:'6'},

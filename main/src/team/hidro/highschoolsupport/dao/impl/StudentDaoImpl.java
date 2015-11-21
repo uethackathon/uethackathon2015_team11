@@ -3,6 +3,7 @@ package team.hidro.highschoolsupport.dao.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.dbutils.DbUtils;
@@ -84,11 +85,6 @@ public class StudentDaoImpl extends AutoWireJdbcDaoSupport implements StudentDao
 		
 	}
 
-	@Override
-	public void update(StudentDetail item) {
-		
-		
-	}
 
 	@Override
 	public StudentDetail getByName(String usernme) {
@@ -125,6 +121,51 @@ public class StudentDaoImpl extends AutoWireJdbcDaoSupport implements StudentDao
 		}
 		return null;
 		
+	}
+	
+	@Override
+	public List<StudentDetail> getListStudentByClassId(int id) {
+		Connection conn = null;
+		PreparedStatement smt = null;
+		ResultSet rs = null;
+		try {
+			conn = dataSource.getConnection();
+			String sql = "Select student.* from student inner join class_student on student.user_id = class_student.student_user_id "
+					+ "where class_student.class_id = ?";
+			smt = conn.prepareStatement(sql);
+			smt.setInt(1, id);
+
+			rs = smt.executeQuery();
+			List<StudentDetail> studentDetails = new ArrayList<StudentDetail>();
+			while (rs.next()) {
+				int studentId = rs.getInt("user_id");
+				String studentName = rs.getString("name");
+				String studentBirthday = rs.getString("birthday");
+				String studentAvartar = rs.getString("avartar");
+				int studentSex = rs.getInt("sex");
+				String studentAddress = rs.getString("address");
+				int studentClassId = rs.getInt("class_id");
+				String studentIntroduce = rs.getString("introduce");
+				StudentDetail studentDetail = new StudentDetail(studentId, studentName, studentBirthday, studentAvartar,
+						studentSex, studentAddress, studentIntroduce, studentClassId);
+				studentDetails.add(studentDetail);
+			}
+			return studentDetails;
+		} catch (Exception e) {
+			// logger.error("queryPost", e);
+			e.printStackTrace();
+		} finally {
+			DbUtils.closeQuietly(rs);
+			DbUtils.closeQuietly(smt);
+			DbUtils.closeQuietly(conn);
+		}
+		return null;
+	}
+
+	@Override
+	public boolean update(StudentDetail item) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

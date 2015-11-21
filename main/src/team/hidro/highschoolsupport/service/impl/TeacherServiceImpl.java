@@ -16,26 +16,16 @@ public class TeacherServiceImpl implements TeacherService{
 	@Autowired
 	private TeacherDao teacherDao;
 	
-	@Override
-	public Integer save(TeacherDetail item) {
-		return null;
-	}
 
 	@Override
 	public TeacherDetail getById(Integer id) {
-		return null;
+		return teacherDao.getById(id);
 	}
 
 	@Override
 	public List<TeacherDetail> getList() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public void update(TeacherDetail item) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -55,6 +45,18 @@ public class TeacherServiceImpl implements TeacherService{
 
 	public void setTeacherDao(TeacherDao teacherDao) {
 		this.teacherDao = teacherDao;
+	}
+
+	@Override
+	public boolean save(TeacherDetail item) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean update(TeacherDetail item) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
