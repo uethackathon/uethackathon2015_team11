@@ -297,7 +297,25 @@ app.controller("notificationCtrl", function($scope,$http){
 	$http.get($('#rootPath').val() + "/" + $('#id_user').val() + "/notification")
 	.success(function(data){
 		$scope.notifications = data;
-		console.log(data);
+		$(function () {
+            new PNotify({
+                title: "Thông báo",
+                type: "aqua",
+                text: "Có " + data.length + " thông báo mà bạn chưa đọc",
+                nonblock: {
+                    nonblock: true
+                },
+                before_close: function (PNotify) {
+                    PNotify.update({
+                        title: PNotify.options.title + " - Enjoy your Stay",
+                        before_close: null
+                    });
+                    PNotify.queueRemove();
+                    return false;
+                }
+            });
+
+        });
 	});
 	
 });
@@ -310,6 +328,18 @@ app.controller("groupCtrl" , function($scope, $http){
 		$scope.group = data;
 		console.log(data);
 	});
+	
+});
+
+app.controller("sendMailCtrl" , function($scope, $http){
+	
+	$scope.mail = {
+			tieude : '',
+			noidung : ''
+	}
+	send_mail = function(){
+		console.log(mail);
+	}
 	
 });
 

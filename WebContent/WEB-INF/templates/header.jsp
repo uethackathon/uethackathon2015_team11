@@ -7,15 +7,15 @@
 	    <meta charset="utf-8">
 	<!-- Logo -->
 	<a href="index2.html" class="logo"> <!-- mini logo for sidebar mini 50x50 pixels -->
-		<span class="logo-mini"><b>A</b>LT</span> <!-- logo for regular state and mobile devices -->
-		<span class="logo-lg"><b>Admin</b>LTE</span>
+		<span class="logo-mini"><img style = "height: 50px; width: 50px " src="<spring:url value="/resources/avatar/logo2.png" />" alt="User profile picture"></span> <!-- logo for regular state and mobile devices -->
+		<span class="logo-lg"> HighSchool Support</span>
 	</a>
 	<!-- Header Navbar: style can be found in header.less -->
 	<nav class="navbar navbar-static-top" role="navigation">
 		<!-- Sidebar toggle button-->
-		<!-- <a href="#" class="sidebar-toggle" data-toggle="offcanvas"
+		<a href="#" class="sidebar-toggle" data-toggle="offcanvas"
 			role="button"> <span class="sr-only">Toggle navigation</span>
-		</a> -->
+		</a>
 		<div class="navbar-custom-menu">
 			<ul class="nav navbar-nav" ng-controller="notificationCtrl">
 				<!-- Notifications: style can be found in dropdown.less -->
