@@ -7,15 +7,6 @@
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
           <!-- Sidebar user panel -->
-          <div class="user-panel">
-            <div class="pull-left image">
-              <img src="<spring:url value="/resources/dist/img/user2-160x160.jpg" />" class="img-circle" alt="User Image">
-            </div>
-            <div class="pull-left info">
-              <p>Alexander Pierce</p>
-              <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-            </div>
-          </div>
           <!-- search form -->
           <form action="#" method="get" class="sidebar-form">
             <div class="input-group">
@@ -28,13 +19,17 @@
           <!-- /.search form -->
           <!-- sidebar menu: : style can be found in sidebar.less -->
           <ul class="sidebar-menu">
-            <li class="header">Dashboard</li>
-            <li>
+            <li ng-i="${role} == 1">
               <a href="${pageContext.request.contextPath}/${username}/profile">
-                <i class="fa fa-th"></i> <span>Thông Tin Cá Nhân</span>
+                <i class="fa fa-user"></i> <span>Thông Tin Cá Nhân</span>
               </a>
             </li>
-            <li class="active treeview">
+            <li ng-i="${role} == 3">
+              <a href="${pageContext.request.contextPath}/home">
+                <i class="fa fa-th"></i> <span>Danh sách lớp học</span>
+              </a>
+            </li>
+            <!-- <li class="active treeview">
               <a href="#">
                 <i class="fa fa-dashboard"></i> <span>Dashboard</span> <i class="fa fa-angle-left pull-right"></i>
               </a>
@@ -42,10 +37,10 @@
                 <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
                 <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
               </ul>
-            </li>
+            </li> -->
             <li class="treeview" ng-if="${role} == 1">
               <a href="#">
-                <i class="fa fa-circle-o text-red"></i>
+                <i class="fa fa-group"></i>
                 <span>Group môn học</span>
               </a>
               <ul class="treeview-menu" >
@@ -57,7 +52,7 @@
             
             <li class="treeview" ng-if="${role} == 3">
               <a href="#">
-                <i class="fa fa-circle-o text-red"></i>
+                <i class="fa fa-group"></i>
                 <span>Group môn học</span>
               </a>
               <ul class="treeview-menu" >
@@ -74,11 +69,16 @@
             </li>
             
             
-            <li>
-              <a href="pages/calendar.html" ng-if="${role} != 3">
-                <i class="fa fa-calendar"></i> <span>Lịch học</span>
-                <small class="label pull-right bg-red">3</small>
+            <li class="treeview" ng-if="${role} ==1">
+              <a href="#">
+                <i class="fa fa-calendar"></i>
+                <span>Lịch Học</span>
               </a>
+              <ul class="treeview-menu" >
+                <li><a href="${pageContext.request.contextPath}/calendar"><i class="fa fa-circle-o"></i> Thời Khóa Biểu</a></li>
+                <li><a href="${pageContext.request.contextPath}/lifeCalendar"><i class="fa fa-circle-o"></i> Lịch Sinh Hoạt</a></li>
+                
+              </ul>
             </li>
             
             </li>

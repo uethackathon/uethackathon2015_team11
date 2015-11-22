@@ -1,11 +1,11 @@
 <div class="login-box">
       <div class="login-logo">
-        <a href="../../index2.html"><b>Admin</b>LTE</a>
+        <a href="../../index2.html"><b>Highschool</b> Support</a>
       </div><!-- /.login-logo -->
       <div class="login-box-body">
         <div class="row">
-				<div class="col-md-4 col-md-offset-4">
-		            <img src="http://phongdep.vn/sites/default/files/default_images/no-avatar.jpg" style="max-width: 100px;max-height: 100px;" class="img-circle profile_img"/>
+				<div class="col-md-3 col-md-offset-3">
+		            <img src="resources/avatar/logo2.png" style="max-width: 150px;max-height: 150px;" class="img-circle profile_img"/>
 				</div>
 			</div>
 	    	<br/>
@@ -20,7 +20,7 @@
 						<div class="form-group">
 		    				<div class="input-group">
 			      				<div class="input-group-addon"><span class="text-primary fa fa-lock"></span></div>
-								<input type="text" class="form-control has-feedback-left" name="password" placeholder="Password" required>
+								<input type="password" class="form-control has-feedback-left" name="password" placeholder="Password" required>
 							</div>
 						</div>
 						
