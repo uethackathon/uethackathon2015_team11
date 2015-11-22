@@ -301,11 +301,61 @@ app.controller("notificationCtrl", function($scope,$http){
 	});
 	
 });
-/*app.controller("commentCtrl" , function($scope, $http){
+app.controller("groupCtrl" , function($scope, $http){
 	
-	$http.get("http://localhost:8080/SpringProject/" + $('#id').val() + "/comment")
+	$scope.group = [];
+	
+	$http.get($('#rootPath').val() + "/groupdata/initial/" + $('#groupId').val())
 	.success(function(data){
-		$scope.comments = data;
+		$scope.group = data;
+		console.log(data);
 	});
 	
-});*/
+});
+
+app.controller("statusCtrl" , function($scope, $http, $interval){
+	
+	$scope.status = [];
+	$scope.currentPage = 1;
+	$scope.pageSize = 5;
+	
+	$scope.likePost = function(){
+		console.log("like");
+	};
+	
+	$scope.likeComment = function($comment){
+		console.log($comment);
+	};
+	
+	$scope.addComment = function(){
+		
+		var comment = $('#new_comment').val();
+		$('#new_comment').val("");
+		
+		console.log(comment);
+		$http({
+			url : $('#rootPath').val() + "/" + $('#statusId').val() + "/newComment",
+			params : {
+				content : comment
+			},
+			method  : 'POST',
+	       contentType: "application/json",
+	       headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'}
+		})
+		
+	}
+	
+	$http.get($('#rootPath').val() + "/groupdata/" + $('#groupId').val() + "/status/" + $('#statusId').val())
+	.success(function(data){
+		$scope.status = data;
+	});
+	
+	$interval (function(){
+		$http.get($('#rootPath').val() + "/groupdata/" + $('#groupId').val() + "/status/" + $('#statusId').val())
+		.success(function(data){
+			$scope.status = data;
+			console.log(data);
+		});
+	},2000);
+	
+});

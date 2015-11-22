@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import team.hidro.highschoolsupport.entities.CommentDetail;
 import team.hidro.highschoolsupport.entities.InitialStatusDetail;
@@ -24,22 +25,29 @@ public class GroupController {
 	@Autowired
 	private CommentService commentService;
 	
-	@RequestMapping(value = "/group/initial/{idGroup}", method = RequestMethod.GET)
+	@RequestMapping(value = "/groupdata/initial/{idGroup}", method = RequestMethod.GET)
 	public @ResponseBody InitialStatusDetail getInitialStatus(@PathVariable("idGroup") int groupId) {
 		return statusService.getListInitialStatusByGroupId(groupId);
 	}
 
 	@RequestMapping(value = "/group/{idGroup}", method = RequestMethod.GET)
+	public ModelAndView getGroupView(@PathVariable("idGroup") int groupId) {
+		ModelAndView model = new ModelAndView("group");
+		model.addObject("groupId", groupId);
+		return model;
+	}
+	
+	@RequestMapping(value = "/groupdata/{idGroup}", method = RequestMethod.GET)
 	public @ResponseBody List<StatusDetail> getStatus(@PathVariable("idGroup") int groupId) {
 		return statusService.getListStatusByGroupId(groupId);
 	}
 	
-	@RequestMapping(value = "/group/{idGroup}/status/{statusId}", method = RequestMethod.GET)
-	public @ResponseBody StatusDetail getComments(@PathVariable("idGroup") int groupId) {
-		return statusService.getById(groupId);
+	@RequestMapping(value = "/groupdata/{idGroup}/status/{statusId}", method = RequestMethod.GET)
+	public @ResponseBody StatusDetail getComments(@PathVariable("statusId") int statusId) {
+		return statusService.getById(statusId);
 	}
 
-	@RequestMapping(value = "/group/{idGroup}/{userId}/newStatus", method = RequestMethod.POST)
+	@RequestMapping(value = "/groupdata/{idGroup}/{userId}/newStatus", method = RequestMethod.POST)
 	public @ResponseBody boolean createStatus(@PathVariable("idGroup") int groupId, @PathVariable("userId") int userId,
 			@RequestParam("content") String content, @RequestParam("title") String title,@RequestParam("type") int type) {
 		long dateTime = System.currentTimeMillis();
@@ -47,15 +55,7 @@ public class GroupController {
 		return statusService.save(statusDetail);
 	}
 	
-	@RequestMapping(value = "/group/{idGroup}/{userId}/{idStatus}/newComment", method = RequestMethod.POST)
-	public @ResponseBody boolean createComment(@PathVariable("idGroup") int groupId, @PathVariable("userId") int userId,
-			@PathVariable("idStatus") int statusId, @RequestParam("content") String content) {
-		long dateTime = System.currentTimeMillis();
-		CommentDetail commentDetail = new CommentDetail(content, dateTime, userId, statusId, null);
-		return commentService.save(commentDetail);
-	}
-	
-	@RequestMapping(value = "/status/{statusId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/statusdata/{statusId}", method = RequestMethod.GET)
 	public @ResponseBody StatusDetail getStatus2(@PathVariable("statusId") int statusId) {
 		return statusService.getById(statusId);
 	}
